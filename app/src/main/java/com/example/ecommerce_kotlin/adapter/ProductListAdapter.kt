@@ -1,9 +1,9 @@
 package com.example.ecommerce_kotlin.adapter
 
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.ecommerce_kotlin.databinding.ChildProductBinding
 import com.example.ecommerce_kotlin.model.product_model.ProductModelItem
 
@@ -37,9 +37,10 @@ class ProductListAdapter(private val products: List<ProductModelItem>) :
         holder.binding.apply {
 
             tvProdName.text = products[position].title
-            tvPrice.text = products[position].price.toString()
-            tvRating.text = products[position].rating.toString()
-            ivProdImg.setImageURI(Uri.parse(products[position].image))
+            tvPrice.text = "₹${products[position].price.toString()}"
+            tvRating.text = products[position].rating.rate.toString()
+            //ivProdImg.setImageResource(products[position].image)
+            Glide.with(ivProdImg.context).load(products[position].image).into(ivProdImg)
         }
     }
 }

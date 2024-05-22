@@ -6,9 +6,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.GridLayoutManager
+import com.example.ecommerce_kotlin.adapter.ProductListAdapter
 import com.example.ecommerce_kotlin.databinding.ActivityMainBinding
 import com.example.ecommerce_kotlin.helper.RetrofitHelper
 import com.example.ecommerce_kotlin.model.product_model.ProductModel
+import com.example.ecommerce_kotlin.model.product_model.ProductModelItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -22,7 +25,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    private val productList = listOf<Any>()
+    private var productList = listOf<ProductModelItem>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,11 +50,13 @@ class MainActivity : AppCompatActivity() {
                         call: Call<ProductModel?>,
                         response: Response<ProductModel?>
                     ) {
-                        Log.e("RESPONSE-->", response.body().toString())
-                        if (response.isSuccessful && response.body() != null) {
-
+                        println("RESPONSE-->${response.body().toString()}")
+                        productList = response.body()!!
+                        println("Title-->${productList[0].title}")
+                        binding.rvProduct.adapter = ProductListAdapter(productList).apply {
+//                            binding.rvProduct.layoutManager = LinearLayoutManager(this@MainActivity,LinearLayoutManager.HORIZONTAL, false)
+                            binding.rvProduct.layoutManager = GridLayoutManager(this@MainActivity,2)
                         }
-
                     }
 
                     override fun onFailure(call: Call<ProductModel?>, t: Throwable) {
